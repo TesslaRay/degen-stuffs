@@ -10,6 +10,7 @@ import {
 import WowowAbi from "./constants/wowow.json";
 import { formatUnits } from "viem";
 import { base } from "viem/chains";
+import ContractButton from "./components/ContractButton";
 
 export default function Page() {
   const [targetAddress, setTargetAddress] = useState("");
@@ -56,17 +57,18 @@ export default function Page() {
             <h1 className="text-2xl font-bold text-gray-800 mb-6">
               Get your wowow!
             </h1>
-            <input
+            {/* <input
               className="border mb-4"
               value={targetAddress}
               onChange={(e) => setTargetAddress(e.target.value)}
-            />
-            <button
+            /> */}
+            {/* <button
               className="bg-purple-600 text-white font-bold py-2 px-4 rounded hover:bg-purple-700 disabled:opacity-50 disabled:hover:bg-purple-600"
               disabled={!targetAddress.startsWith("0x")}
             >
               Get wowow tokens
-            </button>
+            </button> */}
+            <ContractButton/>
           </div>
         </div>
       </div>
