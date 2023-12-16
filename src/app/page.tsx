@@ -1,7 +1,9 @@
 'use client'
 import ConnectButton from "./components/ConnectButton";
 import { useAccount, useConnect, useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi'
-import { base } from 'viem/chains' 
+import { base, baseGoerli, baseSepolia } from 'viem/chains' 
+import { useEffect } from "react";
+import ContractButton from "./components/ContractButton";
 
 export default function Page() {
 
@@ -10,9 +12,11 @@ export default function Page() {
   const { switchNetwork } = useSwitchNetwork();
   console.log(address, isConnected)
 
-  if (switchNetwork && isConnected && chain?.id !== base.id) {
-    switchNetwork(base.id);
-  }
+  useEffect(() => {
+    if (switchNetwork && isConnected && chain?.id !== baseGoerli.id) {
+      switchNetwork(baseGoerli.id);
+    }
+  }, [switchNetwork, isConnected, chain?.id, baseGoerli.id]);
   return (<div>
     
 
@@ -27,9 +31,7 @@ export default function Page() {
     <div className="flex h-screen items-center justify-center bg-gradient-to-r from-purple-400 to-blue-500">
       <div className="bg-white rounded-lg shadow-lg p-8 text-center">
         <h1 className="text-2xl font-bold text-gray-800 mb-6">Get a token from Wowow</h1>
-        <button className="bg-purple-600 text-white font-bold py-2 px-4 rounded hover:bg-purple-700">
-          Get Wowow tokens
-        </button>
+        <ContractButton/>
       </div>
     </div>
     </div>
