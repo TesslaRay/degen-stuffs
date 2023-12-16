@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import ConnectButton from "./components/ConnectButton";
 import {
@@ -26,16 +25,18 @@ export default function Page() {
     chainId: 8453,
   });
 
-  if (switchNetwork && isConnected && chain?.id !== base.id) {
-    switchNetwork(base.id);
-  }
-
   useEffect(() => {
     if (isConnected && isSuccess) {
       const balance = formatUnits(data as bigint, 18);
       setTokenBalance(balance);
     }
   }, [isConnected, isSuccess]);
+
+  useEffect(() => {
+    if (switchNetwork && isConnected && chain?.id !== base.id) {
+      switchNetwork(base.id);
+    }
+  }, [switchNetwork, isConnected, chain?.id, base.id]);
 
   return (
     <div className="flex flex-col">
