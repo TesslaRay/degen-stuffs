@@ -2,14 +2,22 @@
 
 import { useEffect, useState } from "react";
 import ConnectButton from "./components/ConnectButton";
-import { useAccount, useContractRead } from "wagmi";
+import {
+  useAccount,
+  useContractRead,
+  useNetwork,
+  useSwitchNetwork,
+} from "wagmi";
 import WowowAbi from "./constants/wowow.json";
 import { formatUnits } from "viem";
+import { base } from "viem/chains";
 
 export default function Page() {
   const [targetAddress, setTargetAddress] = useState("");
   const [tokenBalance, setTokenBalance] = useState("");
   const { isConnected, address } = useAccount();
+  const { switchNetwork } = useSwitchNetwork();
+  const { chain } = useNetwork();
   const { data, isSuccess, isLoading } = useContractRead({
     address: "0xB36A0e830bD92E7AA5D959c17A20D7656976dd98",
     abi: WowowAbi,
@@ -17,6 +25,10 @@ export default function Page() {
     args: [address],
     chainId: 8453,
   });
+
+  if (switchNetwork && isConnected && chain?.id !== base.id) {
+    switchNetwork(base.id);
+  }
 
   useEffect(() => {
     if (isConnected && isSuccess) {
