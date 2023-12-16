@@ -7,9 +7,10 @@ import {
   useNetwork,
   useSwitchNetwork,
 } from "wagmi";
-import WowowAbi from "./constants/wowow.json";
+import WowowAbi from "./constants/wowowAbi.json";
 import { formatUnits } from "viem";
 import { base } from "viem/chains";
+import ContractButton from "./components/ContractButton";
 
 export default function Page() {
   const [targetAddress, setTargetAddress] = useState("");
@@ -28,7 +29,7 @@ export default function Page() {
   useEffect(() => {
     if (isConnected && isSuccess) {
       const balance = formatUnits(data as bigint, 18);
-      setTokenBalance(balance);
+      setTokenBalance(Math.floor(Number(balance)).toLocaleString());
     }
   }, [isConnected, isSuccess, data]);
 
@@ -49,9 +50,7 @@ export default function Page() {
           <div className="flex flex-col items-center">
             <h2 className="text-3xl font-semibold mb-4 text-white">Balance</h2>
             <h2 className="text-5xl font-semibold mb-8 text-white">
-              {isNaN(Number(tokenBalance))
-                ? "..."
-                : Math.floor(Number(tokenBalance)).toLocaleString()}
+              {isConnected ? tokenBalance : "..."}
             </h2>
           </div>
           <div className="flex flex-col bg-white rounded-lg shadow-lg p-8 text-center min-w-[40%]">
@@ -63,12 +62,10 @@ export default function Page() {
               value={targetAddress}
               onChange={(e) => setTargetAddress(e.target.value)}
             />
-            <button
-              className="bg-purple-600 text-white font-bold py-2 px-4 rounded hover:bg-purple-700 disabled:opacity-50 disabled:hover:bg-purple-600"
-              disabled={!targetAddress.startsWith("0x")}
-            >
-              Get wowow tokens
-            </button>
+            <ContractButton
+              targetAddress={targetAddress}
+              isConnected={isConnected}
+            />
           </div>
           <h3 className="font-extralight">
             built by a bunch of degens from the{" "}
