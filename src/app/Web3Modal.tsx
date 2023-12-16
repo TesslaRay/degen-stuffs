@@ -1,26 +1,22 @@
 "use client";
 
-import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react'
+import { createWeb3Modal, defaultWagmiConfig } from "@web3modal/wagmi/react";
+import { WagmiConfig } from "wagmi";
+import { base } from "viem/chains";
 
-import { WagmiConfig } from 'wagmi'
-import { arbitrum, base, mainnet } from 'viem/chains'
+const projectId = "6587b2f7788cac5b831cb5707757e769";
 
-// 1. Get projectId at https://cloud.walletconnect.com
-const projectId = '6c4a20ba76a4f7264f5e4469665d4a7e'
-
-// 2. Create wagmiConfig
 const metadata = {
-  name: 'Web3Modal',
-  description: 'Web3Modal Example',
-  url: 'https://web3modal.com',
-  icons: ['https://avatars.githubusercontent.com/u/37784886']
-}
+  name: "wowow Faucet",
+  description: "A faucet for wowow",
+  url: "https://zurf.social/",
+  icons: ["https://zurf.social/assets/mobile-icon.png"],
+};
 
-const chains = [base]
-const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata })
+const chains = [base];
+const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
 
-// 3. Create modal
-createWeb3Modal({ wagmiConfig, projectId, chains })
+createWeb3Modal({ wagmiConfig, projectId, chains });
 
 export function Web3Modal({ children }: any) {
   return <WagmiConfig config={wagmiConfig}>{children}</WagmiConfig>;

@@ -2,8 +2,8 @@ import { Web3Modal } from "./Web3Modal";
 import "./globals.css";
 
 export const metadata = {
-  title: "wowow FAUCET",
-  description: "wowow FAUCET",
+  title: "wowow Faucet",
+  description: "wowow Faucet",
 };
 
 export default function RootLayout({ children }: any) {

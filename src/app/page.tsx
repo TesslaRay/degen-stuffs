@@ -13,11 +13,11 @@ import { base } from "viem/chains";
 
 export default function Page() {
   const [targetAddress, setTargetAddress] = useState("");
-  const [tokenBalance, setTokenBalance] = useState("");
+  const [tokenBalance, setTokenBalance] = useState("...");
   const { isConnected, address } = useAccount();
   const { switchNetwork } = useSwitchNetwork();
   const { chain } = useNetwork();
-  const { data, isSuccess, isLoading } = useContractRead({
+  const { data, isSuccess } = useContractRead({
     address: "0xB36A0e830bD92E7AA5D959c17A20D7656976dd98",
     abi: WowowAbi,
     functionName: "balanceOf",
@@ -30,7 +30,7 @@ export default function Page() {
       const balance = formatUnits(data as bigint, 18);
       setTokenBalance(balance);
     }
-  }, [isConnected, isSuccess]);
+  }, [isConnected, isSuccess, data]);
 
   useEffect(() => {
     if (switchNetwork && isConnected && chain?.id !== base.id) {
@@ -39,23 +39,25 @@ export default function Page() {
   }, [switchNetwork, isConnected, chain?.id, base.id]);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-screen bg-black">
       <div className="flex justify-between items-center p-6">
-        <p className="text-lg font-bold">wowow FAUCET</p>
+        <h1 className="text-lg font-bold text-white">wowow Faucet</h1>
         <ConnectButton />
       </div>
-      <div>
-        <div className="flex flex-col h-screen items-center justify-center bg-gradient-to-r from-purple-400 to-blue-500">
-          <div className="text-3xl font-semibold mb-4 text-white">Balance</div>
-          <div className="text-5xl font-semibold mb-6 text-white">
-            {isLoading
-              ? "..."
-              : Math.floor(Number(tokenBalance)).toLocaleString()}
+      <div className="flex flex-col h-full">
+        <div className="flex flex-col min-h-full items-center justify-around bg-gradient-to-r from-purple-400 to-blue-500">
+          <div className="flex flex-col items-center">
+            <h2 className="text-3xl font-semibold mb-4 text-white">Balance</h2>
+            <h2 className="text-5xl font-semibold mb-8 text-white">
+              {isNaN(Number(tokenBalance))
+                ? "..."
+                : Math.floor(Number(tokenBalance)).toLocaleString()}
+            </h2>
           </div>
           <div className="flex flex-col bg-white rounded-lg shadow-lg p-8 text-center min-w-[40%]">
-            <h1 className="text-2xl font-bold text-gray-800 mb-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6">
               Get your wowow!
-            </h1>
+            </h2>
             <input
               className="border mb-4"
               value={targetAddress}
@@ -68,6 +70,13 @@ export default function Page() {
               Get wowow tokens
             </button>
           </div>
+          <h3 className="font-extralight">
+            built by a bunch of degens from the{" "}
+            <a href="https://zurf.social/" className="font-bold">
+              zurf
+            </a>{" "}
+            team
+          </h3>
         </div>
       </div>
     </div>
