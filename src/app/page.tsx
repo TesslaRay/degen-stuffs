@@ -13,10 +13,10 @@ export default function Page() {
   console.log(address, isConnected)
 
   useEffect(() => {
-    if (switchNetwork && isConnected && chain?.id !== baseGoerli.id) {
+    if (switchNetwork && isConnected && chain?.id !== base.id) {
       switchNetwork(baseGoerli.id);
     }
-  }, [switchNetwork, isConnected, chain?.id, baseGoerli.id]);
+  }, [switchNetwork, isConnected, chain?.id, base.id]);
   return (<div>
     
 
