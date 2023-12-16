@@ -1,7 +1,20 @@
+'use client'
 import ConnectButton from "./components/ConnectButton";
+import { useAccount, useConnect, useDisconnect, useNetwork, useSwitchNetwork } from 'wagmi'
+import { base } from 'viem/chains' 
 
 export default function Page() {
+
+  const { address, isConnected } = useAccount()
+  const { chain } = useNetwork();
+  const { switchNetwork } = useSwitchNetwork();
+  console.log(address, isConnected)
+
+  if (switchNetwork && isConnected && chain?.id !== base.id) {
+    switchNetwork(base.id);
+  }
   return (<div>
+    
 
 
     <div className="flex justify-between items-center p-6">
