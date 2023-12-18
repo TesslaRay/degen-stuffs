@@ -11,15 +11,19 @@ import WowowAbi from "./constants/wowowAbi.json";
 import { formatUnits } from "viem";
 import { base } from "viem/chains";
 import ContractButton from "./components/ContractButton";
+import CooldownButton from "./components/CooldownButton";
+
+const contractWowow = "0xB36A0e830bD92E7AA5D959c17A20D7656976dd98";
 
 export default function Page() {
-  const [targetAddress, setTargetAddress] = useState("");
   const [tokenBalance, setTokenBalance] = useState("...");
+  const [hoursUntilClaim, setHoursUntilClaim] = useState(0);
+  const [txError, setTxError] = useState(false);
   const { isConnected, address } = useAccount();
   const { switchNetwork } = useSwitchNetwork();
   const { chain } = useNetwork();
-  const { data, isSuccess } = useContractRead({
-    address: "0xB36A0e830bD92E7AA5D959c17A20D7656976dd98",
+  const { data: balanceData, isSuccess: balanceSuccess } = useContractRead({
+    address: contractWowow,
     abi: WowowAbi,
     functionName: "balanceOf",
     args: [address],
@@ -27,11 +31,11 @@ export default function Page() {
   });
 
   useEffect(() => {
-    if (isConnected && isSuccess) {
-      const balance = formatUnits(data as bigint, 18);
+    if (isConnected && balanceSuccess) {
+      const balance = formatUnits(balanceData as bigint, 18);
       setTokenBalance(Math.floor(Number(balance)).toLocaleString());
     }
-  }, [isConnected, isSuccess, data]);
+  }, [isConnected, balanceSuccess, balanceData]);
 
   useEffect(() => {
     if (switchNetwork && isConnected && chain?.id !== base.id) {
@@ -40,31 +44,37 @@ export default function Page() {
   }, [switchNetwork, isConnected, chain?.id, base.id]);
 
   return (
-    <div className="flex flex-col h-screen bg-black">
+    <div className="flex flex-col h-screen bg-[#17101F]">
       <div className="flex justify-between items-center p-6">
         <h1 className="text-lg font-bold text-white">wowow Faucet</h1>
         <ConnectButton />
       </div>
       <div className="flex flex-col h-full">
-        <div className="flex flex-col min-h-full items-center justify-around bg-gradient-to-r from-purple-400 to-blue-500">
+        <div className="flex flex-col min-h-full items-center justify-around bg-gradient-to-t from-[#40AF46] to-[#17101F]">
           <div className="flex flex-col items-center">
             <h2 className="text-3xl font-semibold mb-4 text-white">Balance</h2>
             <h2 className="text-5xl font-semibold mb-8 text-white">
               {isConnected ? tokenBalance : "..."}
             </h2>
           </div>
-          <div className="flex flex-col bg-white rounded-lg shadow-lg p-8 text-center min-w-[40%]">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6">
-              Get your wowow!
+          <div className="flex flex-col bg-white rounded-lg shadow-lg p-8 text-center min-w-[40%] gap-y-4">
+            <h2 className="text-2xl font-bold text-gray-800">
+              {txError
+                ? "Something went wrong"
+                : hoursUntilClaim === 0
+                ? "Get your wowow!"
+                : `Come back in ${hoursUntilClaim} hours`}
             </h2>
-            <input
-              className="border mb-4"
-              value={targetAddress}
-              onChange={(e) => setTargetAddress(e.target.value)}
-            />
             <ContractButton
-              targetAddress={targetAddress}
               isConnected={isConnected}
+              setHoursUntilClaim={setHoursUntilClaim}
+              setTxError={setTxError}
+            />
+            <CooldownButton
+              isConnected={isConnected}
+              address={address}
+              setHoursUntilClaim={setHoursUntilClaim}
+              setTxError={setTxError}
             />
           </div>
           <h3 className="font-extralight">

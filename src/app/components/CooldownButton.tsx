@@ -4,28 +4,32 @@ import WowowFaucetAbi from "../constants/wowowFaucetAbi.json";
 
 const contractWowowFaucet = "0x78D66BE10A55ad59014e0770A91576A8E6702B68";
 
-export default function ContractButton({
+export default function CooldownButton({
   isConnected,
+  address,
   setHoursUntilClaim,
   setTxError,
 }: {
   isConnected: boolean;
+  address: `0x${string}` | undefined;
   setHoursUntilClaim: (hours: number) => void;
   setTxError: (isError: boolean) => void;
 }) {
   const { writeAsync, isLoading, isSuccess } = useContractWrite({
     address: contractWowowFaucet,
     abi: WowowFaucetAbi,
-    functionName: "requestTokens",
+    functionName: "getCoolDown",
     chainId: 8453,
   });
 
-  const handleClick = async () => {
+  const handleClick = async (address: string) => {
     if (isConnected) {
       try {
-        await writeAsync();
+        const txResponse = await writeAsync({
+          args: [address],
+        });
         if (isSuccess) {
-          setHoursUntilClaim(24);
+          setHoursUntilClaim(Number(txResponse));
         }
       } catch (err) {
         setTxError(true);
@@ -35,11 +39,11 @@ export default function ContractButton({
 
   return (
     <button
-      className="bg-purple-600 text-white font-bold py-2 px-4 rounded hover:bg-purple-800 disabled:opacity-50 disabled:hover:bg-purple-600"
-      onClick={() => handleClick()}
+      className="bg-gray-400 text-white font-bold py-2 px-4 rounded hover:bg-gray-500 disabled:opacity-50 disabled:hover:bg-gray-400"
+      onClick={() => handleClick(address!)}
       disabled={isLoading}
     >
-      {isLoading ? "Processing..." : "Give me wowow"}
+      {isLoading ? "Processing..." : "Hours until next claim"}
     </button>
   );
 }

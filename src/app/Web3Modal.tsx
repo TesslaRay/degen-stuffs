@@ -16,7 +16,13 @@ const metadata = {
 const chains = [base];
 const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
 
-createWeb3Modal({ wagmiConfig, projectId, chains });
+createWeb3Modal({
+  wagmiConfig,
+  projectId,
+  chains,
+  themeMode: "dark",
+  themeVariables: { "--w3m-accent": "#40AF46" },
+});
 
 export function Web3Modal({ children }: any) {
   return <WagmiConfig config={wagmiConfig}>{children}</WagmiConfig>;
