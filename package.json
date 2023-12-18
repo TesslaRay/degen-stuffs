@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@web3modal/wagmi": "^3.5.0",
+    "date-fns": "^2.30.0",
     "next": "14.0.4",
     "pino-pretty": "^10.3.0",
     "react": "^18",
